@@ -25,12 +25,12 @@ const contactInfo = [
   {
     icon: Phone,
     label: "Call Us",
-    details: ["+264 61 23 5189"],
+    details: ["+264 (0)61 250448"],
   },
   {
     icon: Mail,
     label: "Email Us",
-    details: ["info@gold-ideas.com"],
+    details: ["ewald@gold-ideas.com"],
   },
   {
     icon: Clock,
