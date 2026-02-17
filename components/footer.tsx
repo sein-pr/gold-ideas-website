@@ -4,8 +4,61 @@ import Link from "next/link"
 import Image from "next/image"
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook } from "lucide-react"
 import { motion } from "framer-motion"
+import { useLanguage } from "./language-provider"
 
 export function Footer() {
+  const { language } = useLanguage()
+  const t = {
+    en: {
+      description:
+        "Master goldsmith Ewald Gann creates bespoke jewelry that captures the spirit of Namibia. Each piece is a unique work of art.",
+      quickLinks: "Quick Links",
+      ourStory: "Our Story",
+      collections: "Collections",
+      services: "Services",
+      contactUs: "Contact Us",
+      servicesTitle: "Services",
+      serviceItems: ["Custom Design", "Jewelry Repair", "Stone Setting", "Restoration", "Consultations"],
+      visitUs: "Visit Us",
+      hours: ["Mon - Fri: 09:00 - 17:00", "Sat: 09:00 - 13:00", "Sun: Closed"],
+      copyright: "© 2026 Gold Ideas. All rights reserved. Design & Craftsmanship by Ewald Gann.",
+      privacyPolicy: "Privacy Policy",
+      impressum: "Impressum",
+    },
+    de: {
+      description:
+        "Der Goldschmiedemeister Ewald Gann fertigt Schmuck nach Mass, der den Geist Namibias einfaengt. Jedes Stueck ist ein einzigartiges Kunstwerk.",
+      quickLinks: "Schnellzugriffe",
+      ourStory: "Unsere Geschichte",
+      collections: "Kollektionen",
+      services: "Leistungen",
+      contactUs: "Kontakt",
+      servicesTitle: "Leistungen",
+      serviceItems: ["Individuelles Design", "Schmuckreparatur", "Steinfassen", "Restaurierung", "Beratung"],
+      visitUs: "Besuchen Sie uns",
+      hours: ["Mo - Fr: 09:00 - 17:00", "Sa: 09:00 - 13:00", "So: Geschlossen"],
+      copyright: "© 2026 Gold Ideas. Alle Rechte vorbehalten. Design & Handwerk von Ewald Gann.",
+      privacyPolicy: "Datenschutz",
+      impressum: "Impressum",
+    },
+    af: {
+      description:
+        "Meester goudsmid Ewald Gann skep pasgemaakte juweliersware wat die gees van Namibie vasvang. Elke stuk is 'n unieke kunswerk.",
+      quickLinks: "Vinnige Skakels",
+      ourStory: "Ons Storie",
+      collections: "Versamelings",
+      services: "Dienste",
+      contactUs: "Kontak Ons",
+      servicesTitle: "Dienste",
+      serviceItems: ["Pasgemaakte Ontwerp", "Juweel Herstel", "Steensetting", "Restourasie", "Konsultasies"],
+      visitUs: "Besoek Ons",
+      hours: ["Ma - Vr: 09:00 - 17:00", "Sa: 09:00 - 13:00", "So: Gesluit"],
+      copyright: "© 2026 Gold Ideas. Alle regte voorbehou. Ontwerp en vakmanskap deur Ewald Gann.",
+      privacyPolicy: "Privaatheidsbeleid",
+      impressum: "Impressum",
+    },
+  }[language]
+
   return (
     <footer className="border-t border-border bg-card">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
@@ -24,10 +77,7 @@ export function Footer() {
               height={53}
               className="mb-6 h-12 w-auto"
             />
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Master goldsmith Ewald Gann creates bespoke jewelry that captures the spirit of Namibia.
-              Each piece is a unique work of art.
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{t.description}</p>
             <div className="mt-6 flex gap-4">
               <a
                 href="https://www.instagram.com"
@@ -56,13 +106,13 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="mb-6 font-serif text-lg text-foreground">Quick Links</h3>
+            <h3 className="mb-6 font-serif text-lg text-foreground">{t.quickLinks}</h3>
             <ul className="flex flex-col gap-3">
               {[
-                { href: "/about", label: "Our Story" },
-                { href: "/collections", label: "Collections" },
-                { href: "/services", label: "Services" },
-                { href: "/contact", label: "Contact Us" },
+                { href: "/about", label: t.ourStory },
+                { href: "/collections", label: t.collections },
+                { href: "/services", label: t.services },
+                { href: "/contact", label: t.contactUs },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -82,15 +132,9 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="mb-6 font-serif text-lg text-foreground">Services</h3>
+            <h3 className="mb-6 font-serif text-lg text-foreground">{t.servicesTitle}</h3>
             <ul className="flex flex-col gap-3">
-              {[
-                "Custom Design",
-                "Jewelry Repair",
-                "Stone Setting",
-                "Restoration",
-                "Consultations",
-              ].map((service) => (
+              {t.serviceItems.map((service) => (
                 <li key={service}>
                   <Link
                     href="/services"
@@ -109,7 +153,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h3 className="mb-6 font-serif text-lg text-foreground">Visit Us</h3>
+            <h3 className="mb-6 font-serif text-lg text-foreground">{t.visitUs}</h3>
             <ul className="flex flex-col gap-4">
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
@@ -126,9 +170,9 @@ export function Footer() {
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
                 <Clock className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                 <div>
-                  <p>Mon - Fri: 09:00 - 17:00</p>
-                  <p>Sat: 09:00 - 13:00</p>
-                  <p>Sun: Closed</p>
+                  {t.hours.map((item) => (
+                    <p key={item}>{item}</p>
+                  ))}
                 </div>
               </li>
             </ul>
@@ -136,15 +180,13 @@ export function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs text-muted-foreground">
-            {"© 2026 Gold Ideas. All rights reserved. Design & Craftsmanship by Ewald Gann."}
-          </p>
+          <p className="text-xs text-muted-foreground">{t.copyright}</p>
           <div className="flex gap-6">
             <Link href="#" className="text-xs text-muted-foreground transition-colors hover:text-accent">
-              Privacy Policy
+              {t.privacyPolicy}
             </Link>
             <Link href="#" className="text-xs text-muted-foreground transition-colors hover:text-accent">
-              Impressum
+              {t.impressum}
             </Link>
           </div>
         </div>

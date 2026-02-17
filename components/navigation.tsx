@@ -6,14 +6,79 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Sun, Moon } from "lucide-react"
+import { Menu, X, Sun, Moon, Languages, Check } from "lucide-react"
+import { useLanguage, type Language } from "./language-provider"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/collections", label: "Collections" },
-  { href: "/services", label: "Services" },
-  { href: "/contact", label: "Contact" },
+const navLabels = {
+  en: {
+    home: "Home",
+    about: "About",
+    collections: "Collections",
+    services: "Services",
+    contact: "Contact",
+    bookConsultation: "Book Consultation",
+    toggleDarkMode: "Toggle dark mode",
+    toggleMenu: "Toggle menu",
+    language: "Language",
+  },
+  de: {
+    home: "Startseite",
+    about: "Ueber uns",
+    collections: "Kollektionen",
+    services: "Leistungen",
+    contact: "Kontakt",
+    bookConsultation: "Beratung buchen",
+    toggleDarkMode: "Dunklen Modus umschalten",
+    toggleMenu: "Menue umschalten",
+    language: "Sprache",
+  },
+  af: {
+    home: "Tuis",
+    about: "Oor Ons",
+    collections: "Versamelings",
+    services: "Dienste",
+    contact: "Kontak",
+    bookConsultation: "Boek Konsultasie",
+    toggleDarkMode: "Wissel donker tema",
+    toggleMenu: "Wissel kieslys",
+    language: "Taal",
+  },
+} as const
+
+const navLinksByLanguage = {
+  en: [
+    { href: "/", label: navLabels.en.home },
+    { href: "/about", label: navLabels.en.about },
+    { href: "/collections", label: navLabels.en.collections },
+    { href: "/services", label: navLabels.en.services },
+    { href: "/contact", label: navLabels.en.contact },
+  ],
+  de: [
+    { href: "/", label: navLabels.de.home },
+    { href: "/about", label: navLabels.de.about },
+    { href: "/collections", label: navLabels.de.collections },
+    { href: "/services", label: navLabels.de.services },
+    { href: "/contact", label: navLabels.de.contact },
+  ],
+  af: [
+    { href: "/", label: navLabels.af.home },
+    { href: "/about", label: navLabels.af.about },
+    { href: "/collections", label: navLabels.af.collections },
+    { href: "/services", label: navLabels.af.services },
+    { href: "/contact", label: navLabels.af.contact },
+  ],
+}
+
+const languageOptions: Array<{ value: Language; label: string }> = [
+  { value: "en", label: "English" },
+  { value: "de", label: "Deutsch" },
+  { value: "af", label: "Afrikaans" },
 ]
 
 export function Navigation() {
@@ -21,7 +86,10 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
+  const { language, setLanguage } = useLanguage()
   const [mounted, setMounted] = useState(false)
+  const labels = navLabels[language]
+  const navLinks = navLinksByLanguage[language]
 
   useEffect(() => {
     setMounted(true)
@@ -102,7 +170,7 @@ export function Navigation() {
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition-all duration-300 hover:bg-secondary hover:scale-105"
-                aria-label="Toggle dark mode"
+                aria-label={labels.toggleDarkMode}
               >
                 <AnimatePresence mode="wait">
                   {theme === "dark" ? (
@@ -130,17 +198,40 @@ export function Navigation() {
               </button>
             )}
 
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition-all duration-300 hover:bg-secondary hover:scale-105"
+                  aria-label={labels.language}
+                >
+                  <Languages className="h-4 w-4 text-primary" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                {languageOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onClick={() => setLanguage(option.value)}
+                    className="flex items-center justify-between"
+                  >
+                    {option.label}
+                    {language === option.value ? <Check className="h-4 w-4 text-accent" /> : null}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Link
               href="/contact"
               className="hidden rounded-sm bg-primary px-5 py-2.5 text-sm font-medium tracking-wide text-primary-foreground transition-all duration-300 hover:bg-accent hover:text-accent-foreground hover:scale-105 lg:block"
             >
-              Book Consultation
+              {labels.bookConsultation}
             </Link>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card transition-all duration-300 hover:bg-secondary lg:hidden"
-              aria-label="Toggle menu"
+              aria-label={labels.toggleMenu}
             >
               {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -191,7 +282,7 @@ export function Navigation() {
                   onClick={() => setIsOpen(false)}
                   className="rounded-sm bg-primary px-8 py-3 text-sm font-medium tracking-widest uppercase text-primary-foreground transition-all duration-300 hover:bg-accent hover:text-accent-foreground"
                 >
-                  Book Consultation
+                  {labels.bookConsultation}
                 </Link>
               </motion.div>
             </div>
